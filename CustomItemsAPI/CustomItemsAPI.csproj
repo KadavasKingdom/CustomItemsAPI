@@ -15,11 +15,18 @@
 		<Description>LabAPI CustomItems implementation.</Description>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageTags>labapi-plugin</PackageTags>
+		<DefineConstants>HINT_FRAMEWORK_HUB</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="..\LICENSE.txt" Pack="true" PackagePath="\" />
 		<None Include="..\README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="HintFrameworkHub">
+	    <HintPath>..\3rdparty\HintFrameworkHub.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 	<ItemGroup>

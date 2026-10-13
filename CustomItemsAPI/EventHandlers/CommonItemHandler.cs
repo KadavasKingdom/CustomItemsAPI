@@ -2,11 +2,18 @@
 using CustomItemsAPI.Items;
 using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Events.CustomHandlers;
+using LabApi.Features.Wrappers;
+using PlayerRoles;
 
 namespace CustomItemsAPI.EventHandlers;
 
 internal sealed class CommonItemHandler : CustomEventsHandler
 {
+    /// <summary>
+    /// Action to show custom hint. Can be used with any hint framework or even disabling it (null).
+    /// </summary>
+    public Action<Player, string>? HintShow = (player, hint) => player.SendHint(hint);
+
     #region Change
     public override void OnPlayerChangingItem(PlayerChangingItemEventArgs ev)
     {
@@ -22,6 +29,7 @@ internal sealed class CommonItemHandler : CustomEventsHandler
             CustomItemEvents.OnChanging(prev_Item, ev.Player, ev.OldItem, ev.NewItem, true, isAllowedHelper);
             cur_item.OnChanging(ev.Player, ev.OldItem, ev.NewItem, true, isAllowedHelper);
         }
+
         ev.IsAllowed = isAllowedHelper.Value;
     }
     public override void OnPlayerChangedItem(PlayerChangedItemEventArgs ev)
@@ -37,6 +45,9 @@ internal sealed class CommonItemHandler : CustomEventsHandler
             CustomItemEvents.OnChanged(prev_Item, ev.Player, ev.OldItem, ev.NewItem, true);
             cur_item.OnChanged(ev.Player, ev.OldItem, ev.NewItem, true);
         }
+        else
+            foreach (var item in ev.Player.CurrentSpectators)
+                HintShow?.Invoke(ev.Player, string.Empty);
     }
     #endregion
     #region Drop
@@ -111,5 +122,14 @@ internal sealed class CommonItemHandler : CustomEventsHandler
             return;
         CustomItemEvents.OnSearched(cur_item, ev.Player, ev.Pickup);
         cur_item.OnSearched(ev.Player, ev.Pickup);
+    }
+    public override void OnPlayerChangedSpectator(PlayerChangedSpectatorEventArgs ev)
+    {
+        if (ev.Player.Role != RoleTypeId.Spectator || ev.NewTarget == null)
+            return;
+        if (CustomItems.TryGetCustomItem(ev.NewTarget.CurrentItem, out CustomItemBase cur_item))
+            cur_item.OnPlayerChangedSpectator(ev);
+        else
+            HintShow?.Invoke(ev.Player, string.Empty);
     }
 }

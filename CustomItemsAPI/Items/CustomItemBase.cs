@@ -1,5 +1,6 @@
 ﻿using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
+using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Features.Wrappers;
 using MEC;
 using Scp914;
@@ -16,7 +17,16 @@ public abstract class CustomItemBase
     /// <summary>
     /// Action to show custom hint. Can be used with any hint framework or even disabling it (null).
     /// </summary>
-    public Action<Player, string>? HintShow = (player, hint) => player.SendHint(hint);
+    public Action<Player, string>? HintShow { get; set; } =
+#if HINT_FRAMEWORK_HUB
+    (player, hint) =>
+    {
+        CL.Debug("Showing custom hint", Main.Instance.Config.Debug);
+        HintFrameworkHub.HintSystem.ShowHint(player, hint, 5f);
+    };
+#else
+    (player, hint) => player.SendHint(hint, 5f);
+#endif
 
     /// <summary>
     /// Name of your custom item.
@@ -62,6 +72,11 @@ public abstract class CustomItemBase
     /// Overrides the hint for showing custom selected details
     /// </summary>
     public virtual string OverrideSelectedHint { get; set; } = Main.Instance.Config.SelectedHint;
+
+    /// <summary>
+    /// Shows spectators when a player has this item seelcted.
+    /// </summary>
+    public virtual bool OverrideShowItemHintToSpectators { get; set; } = true;
 
     /// <summary>
     /// Called once when this instance is registered.
@@ -125,8 +140,18 @@ public abstract class CustomItemBase
     public virtual void OnChanged(Player player, Item? oldItem, Item? newItem, bool changedToThisItem)
     {
         CL.Debug($"OnChanged {player.PlayerId} {oldItem?.Serial} {newItem?.Serial} {changedToThisItem}", Main.Instance.Config.Debug);
-        if (changedToThisItem && OverrideShowSelectHint)
+        if (!changedToThisItem)
+            return;
+
+        if (OverrideShowSelectHint)
             HintShow?.Invoke(player, string.Format(OverrideSelectedHint, DisplayName, Description));
+
+        if (OverrideShowItemHintToSpectators)
+            foreach (var item in player.CurrentSpectators)
+            {
+                CL.Debug("HINT SENDING TO SPECTATOR ON CHANGED", Main.Instance.Config.Debug);
+                HintShow?.Invoke(player, string.Format(OverrideSelectedHint, DisplayName, Description));
+            }
     }
 
     /// <summary>
@@ -277,5 +302,15 @@ public abstract class CustomItemBase
             });
 
         }
+    }
+
+    /// <summary>
+    /// Someone changes to spectate someone holding the current Custom Item.
+    /// </summary>
+    public virtual void OnPlayerChangedSpectator(PlayerChangedSpectatorEventArgs ev)
+    {
+        CL.Debug($"OnPlayerChangedSpectator {ev.Player.PlayerId} changed to {ev.NewTarget?.PlayerId ?? -1}", Main.Instance.Config.Debug);
+        if (OverrideShowItemHintToSpectators)
+            HintShow?.Invoke(ev.Player, string.Format(OverrideSelectedHint, DisplayName, Description));
     }
 }
