@@ -72,56 +72,12 @@ public abstract class CustomKeycardBase : CustomItemBase
             throw new Exception("Pickup is not a Keycard Pickup");
         if (OpenDoorsOnThrow.HasValue)
             keycardPickup.Base._openDoorsOnCollision = OpenDoorsOnThrow.Value;
-
         if (!keycardPickup.Base.TryGetTemplate<IC.KeycardItem>(out var template))
             throw new Exception("Cannot get a template for this item");
-
         if (!template.Customizable)
             return;
 
-        // getting all than later checking
-        // me when a keycard isnt customisable cant do shit with these.
-        IC.NametagDetail? nametag = template.Details.OfType<IC.NametagDetail>().FirstOrDefault();
-        IC.CustomPermsDetail? customPermsDetail = template.Details.OfType<IC.CustomPermsDetail>().FirstOrDefault();
-        IC.CustomTintDetail? customTint = template.Details.OfType<IC.CustomTintDetail>().FirstOrDefault();
-        IC.CustomWearDetail? customWear = template.Details.OfType<IC.CustomWearDetail>().FirstOrDefault();
-        IC.CustomItemNameDetail? customItemName = template.Details.OfType<IC.CustomItemNameDetail>().FirstOrDefault();
-        IC.CustomSerialNumberDetail? customSerialNumber = template.Details.OfType<IC.CustomSerialNumberDetail>().FirstOrDefault();
-        IC.CustomLabelDetail? customLabel = template.Details.OfType<IC.CustomLabelDetail>().FirstOrDefault();
-        IC.CustomRankDetail? customRank = template.Details.OfType<IC.CustomRankDetail>().FirstOrDefault();
-
-        if (customRank != null)
-            IC.CustomRankDetail._index = RankIndex;
-
-        if (Levels.HasValue && customPermsDetail != null)
-            IC.CustomPermsDetail._customLevels = Levels.Value;
-
-        if (PermissionColor.HasValue && customPermsDetail != null)
-            IC.CustomPermsDetail._customColor = PermissionColor;
-
-        if (TintColor.HasValue && customTint != null)
-            IC.CustomTintDetail._customColor = TintColor.Value;
-
-        if (WearLevel.HasValue && customWear != null)
-            IC.CustomWearDetail._customWearLevel = WearLevel.Value;
-
-        if (nametag != null && !string.IsNullOrEmpty(CustomNameTag))
-            IC.NametagDetail._customNametag = CustomNameTag;
-
-        if (customItemName != null && !string.IsNullOrEmpty(CustomName))
-            IC.CustomItemNameDetail._customText = CustomName;
-
-        if (customSerialNumber != null && !string.IsNullOrEmpty(CustomSerial))
-            IC.CustomSerialNumberDetail._customVal = CustomSerial;
-
-        if (customLabel != null && !string.IsNullOrEmpty(CustomLabelText) && CustomLabelColor.HasValue)
-        {
-            IC.CustomLabelDetail._customText = CustomLabelText;
-            IC.CustomLabelDetail._customColor = CustomLabelColor.Value;
-        }
-
-        IC.KeycardDetailSynchronizer.Database.Remove(keycardPickup.Base.Info.Serial);
-        IC.KeycardDetailSynchronizer.ServerProcessPickup(keycardPickup.Base);
+        SetCustomDetails(template);
     }
 
     /// <inheritdoc/>
@@ -132,13 +88,17 @@ public abstract class CustomKeycardBase : CustomItemBase
             throw new ArgumentOutOfRangeException("Type", item.Type, "Invalid Keycard type.");
         if (item.Base is not IC.KeycardItem keycard)
             throw new ArgumentException($"keycard must not be null! {item.GetType()}");
-
         if (OpenDoorsOnThrow.HasValue)
             keycard.OpenDoorsOnThrow = OpenDoorsOnThrow.Value;
-
         if (!keycard.Customizable)
             return;
 
+        SetCustomDetails(keycard);
+    }
+
+    private void SetCustomDetails(IC.KeycardItem keycard)
+    {
+        CL.Info($"Setting custom details for keycard {keycard.ItemSerial}, {keycard.name}, {keycard.DisplayName}");
         // getting all than later checking
         // me when a keycard isnt customisable cant do shit with these.
         IC.NametagDetail? nametag = keycard.Details.OfType<IC.NametagDetail>().FirstOrDefault();
@@ -174,16 +134,17 @@ public abstract class CustomKeycardBase : CustomItemBase
         if (customSerialNumber != null && !string.IsNullOrEmpty(CustomSerial))
             IC.CustomSerialNumberDetail._customVal = CustomSerial;
 
-        if (customLabel != null && !string.IsNullOrEmpty(CustomLabelText) && CustomLabelColor.HasValue)
+        if (customLabel != null)
         {
-            IC.CustomLabelDetail._customText = CustomLabelText;
-            IC.CustomLabelDetail._customColor = CustomLabelColor.Value;
+            if (!string.IsNullOrEmpty(CustomLabelText))
+                IC.CustomLabelDetail._customText = CustomLabelText;
+            if (CustomLabelColor.HasValue)
+                IC.CustomLabelDetail._customColor = CustomLabelColor.Value;   
         }
 
         IC.KeycardDetailSynchronizer.Database.Remove(keycard.ItemSerial);
         IC.KeycardDetailSynchronizer.ServerProcessItem(keycard);
     }
-
 
     /// <summary>
     /// Called when <paramref name="player"/> is interacted with the <paramref name="door"/>.
