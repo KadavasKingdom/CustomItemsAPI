@@ -3,7 +3,6 @@ using CustomItemsAPI.Items;
 using InventorySystem.Items.Scp1509;
 using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Events.CustomHandlers;
-using LabApi.Features.Wrappers;
 using PlayerRoles;
 
 namespace CustomItemsAPI.EventHandlers;

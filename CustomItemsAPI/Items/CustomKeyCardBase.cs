@@ -1,6 +1,6 @@
 using Interactables.Interobjects.DoorUtils;
 using InventorySystem;
-using LabApi.Features.Wrappers;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using IC = InventorySystem.Items.Keycards;
 
@@ -144,7 +144,7 @@ public abstract class CustomKeycardBase : CustomItemBase
 	/// <param name="door">The <see cref="Door"/> the <paramref name="player"/> interacting.</param>
 	/// <param name="canOpen">Can the <paramref name="player"/> open the <paramref name="door"/>.</param>
 	/// <param name="isAllowed">Can allow this action.</param>
-	public virtual void OnInteractingDoor(Player player, Item item, Door door, TypeWrapper<bool> canOpen, TypeWrapper<bool> isAllowed)
+	public virtual void OnInteractingDoor(Player player, Item item, Door door, [NotNull] TypeWrapper<bool> canOpen, [NotNull] TypeWrapper<bool> isAllowed)
 	{
 	}
 
@@ -167,7 +167,7 @@ public abstract class CustomKeycardBase : CustomItemBase
 	/// <param name="generator">The <see cref="Generator"/> the <paramref name="player"/> interacting.</param>
 	/// <param name="colliderIdHelper">The generator collider id.</param>
 	/// <param name="isAllowed">Can allow this action.</param>
-	public virtual void OnInteractingGenerator(Player player, Item item, Generator generator, TypeWrapper<MapGeneration.Distributors.Scp079Generator.GeneratorColliderId> colliderIdHelper, TypeWrapper<bool> isAllowed)
+	public virtual void OnInteractingGenerator(Player player, Item item, Generator generator, [NotNull] TypeWrapper<MapGeneration.Distributors.Scp079Generator.GeneratorColliderId> colliderIdHelper, [NotNull] TypeWrapper<bool> isAllowed)
 	{
 	}
 
@@ -192,7 +192,7 @@ public abstract class CustomKeycardBase : CustomItemBase
 	/// <param name="lockerChamber">The targeted <see cref="LockerChamber"/>.</param>
 	/// <param name="canOpen">Can the <paramref name="player"/> open the <paramref name="locker"/>.</param>
 	/// <param name="isAllowed">Can allow this action.</param>
-	public virtual void OnInteractingLocker(Player player, Item item, Locker locker, LockerChamber lockerChamber, TypeWrapper<bool> canOpen, TypeWrapper<bool> isAllowed)
+	public virtual void OnInteractingLocker(Player player, Item item, Locker locker, LockerChamber lockerChamber, [NotNull] TypeWrapper<bool> canOpen, [NotNull] TypeWrapper<bool> isAllowed)
 	{
 	}
 
@@ -211,7 +211,7 @@ public abstract class CustomKeycardBase : CustomItemBase
 	/// <param name="player">The Player who called this function.</param>
 	/// <param name="keycardItem">The keycard.</param>
 	/// <param name="isAllowedHelper">Can allow this action.</param>
-	public virtual void OnInspectingKeycard(Player player, KeycardItem keycardItem, TypeWrapper<bool> isAllowedHelper)
+	public virtual void OnInspectingKeycard(Player player, KeycardItem keycardItem, [NotNull] TypeWrapper<bool> isAllowedHelper)
 	{
 	}
 

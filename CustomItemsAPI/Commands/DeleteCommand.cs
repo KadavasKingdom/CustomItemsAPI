@@ -1,5 +1,4 @@
 using CommandSystem;
-using LabApi.Features.Wrappers;
 
 namespace CustomItemsAPI.Commands;
 

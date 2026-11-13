@@ -1,4 +1,4 @@
-﻿using CommandSystem;
+using CommandSystem;
 using UnityEngine;
 
 namespace CustomItemsAPI.Commands;
