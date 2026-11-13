@@ -46,10 +46,10 @@ internal sealed class Main : Plugin<Config>
 	public override string Description => "Enabling creating custom items";
 
 	/// <inheritdoc/>
-	public override string Author => "SlejmUr";
+	public override string Author => "SlejmUr & KadavasKingdom";
 
 	/// <inheritdoc/>
-	public override Version Version => new(0, 0, 11, 0);
+	public override Version Version => Versioning.Version;
 
 	/// <inheritdoc/>
 	public override Version RequiredApiVersion => new(LabApi.Features.LabApiProperties.CompiledVersion);
