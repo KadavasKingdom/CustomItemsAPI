@@ -1,5 +1,4 @@
-﻿using LabApi.Features.Interfaces;
-using LabApi.Features.Wrappers;
+using LabApi.Features.Interfaces;
 using Scp914;
 
 namespace CustomItemsAPI.Helpers;
@@ -9,18 +8,28 @@ namespace CustomItemsAPI.Helpers;
 /// </summary>
 public class Empty914ItemProcessor : IScp914ItemProcessor
 {
-    /// <inheritdoc/>
-    public bool UsePickupMethodOnly => false;
+	/// <inheritdoc/>
+	public bool UsePickupMethodOnly => false;
 
-    /// <inheritdoc/>
-    public Scp914Result UpgradeItem(Scp914KnobSetting setting, Item item)
-    {
-        return new(item.Base);
-    }
+	/// <inheritdoc/>
+	public Scp914Result UpgradeItem(Scp914KnobSetting setting, Item item)
+	{
+		if (item == null)
+		{
+			return default;
+		}
 
-    /// <inheritdoc/>
-    public Scp914Result UpgradePickup(Scp914KnobSetting setting, Pickup pickup)
-    {
-        return new(pickup.Base);
-    }
+		return new(item.Base);
+	}
+
+	/// <inheritdoc/>
+	public Scp914Result UpgradePickup(Scp914KnobSetting setting, Pickup pickup)
+	{
+		if (pickup == null)
+		{
+			return default;
+		}
+
+		return new(pickup.Base);
+	}
 }

@@ -1,34 +1,26 @@
-﻿using InventorySystem.Items.Firearms.Modules.Scp127;
+using InventorySystem.Items.Firearms.Modules.Scp127;
+using System.Diagnostics.CodeAnalysis;
 
-namespace CustomItemsAPI.Overrides;
+namespace CustomItemsAPI;
 
 /// <summary>
-/// Override class for <see cref="Scp127TierManagerModule"/>
+/// Override class for <see cref="Scp127TierManagerModule"/>.
 /// </summary>
-public class Scp127TierManagerModuleOverride : IOverride<Scp127TierManagerModule>
+public class Scp127TierManagerModuleOverride : BaseOverride<Scp127TierManagerModule>
 {
-    /// <summary>
-    /// Helps to ovverride <see cref="Scp127TierManagerModule.Thresholds"/>
-    /// </summary>
-    public Dictionary<Scp127Tier, float> TierToRequiredDamage = null;
+	/// <summary>
+	/// Gets or sets the override for <see cref="Scp127TierManagerModule.Thresholds"/>.
+	/// </summary>
+	public Dictionary<Scp127Tier, float>? TierToRequiredDamage { get; set; }
 
-    /// <inheritdoc/>
-    public Type OverrideType => typeof(Scp127HumeModule);
+	/// <inheritdoc/>
+	public override void Apply([NotNull] ref Scp127TierManagerModule classToOverride)
+	{
+		if (TierToRequiredDamage == null)
+		{
+			return;
+		}
 
-    /// <inheritdoc/>
-    public void Apply(ref Scp127TierManagerModule classToOverride)
-    {
-        if (TierToRequiredDamage == null)
-            return;
-        classToOverride.Thresholds = [.. TierToRequiredDamage.Select(x => new Scp127TierManagerModule.TierThreshold() { Tier = x.Key, RequiredDamage = x.Value })];
-    }
-
-    /// <inheritdoc/>
-    public void Apply(ref object classToOverride)
-    {
-        if (classToOverride is not Scp127TierManagerModule)
-            return;
-        Scp127TierManagerModule overrides = (Scp127TierManagerModule)classToOverride;
-        Apply(ref overrides);
-    }
+		classToOverride.Thresholds = [.. TierToRequiredDamage.Select(x => new Scp127TierManagerModule.TierThreshold() { Tier = x.Key, RequiredDamage = x.Value })];
+	}
 }

@@ -1,51 +1,39 @@
-﻿using InventorySystem.Items.Firearms.Modules;
+using InventorySystem.Items.Firearms.Modules;
+using System.Diagnostics.CodeAnalysis;
 
-namespace CustomItemsAPI.Overrides;
+namespace CustomItemsAPI;
 
 /// <summary>
 /// Override class for <see cref="A7BurnEffectModule"/>.
 /// </summary>
-public class A7BurnEffectModuleOverride : IOverride<A7BurnEffectModule>
+public class A7BurnEffectModuleOverride : BaseOverride<A7BurnEffectModule>
 {
-    /// <summary>
-    /// Max duration for the Burned effect.
-    /// </summary>
-    public MathValueInt MaxDuration = new();
+	/// <summary>
+	/// Gets or sets the max duration for the Burned effect.
+	/// </summary>
+	public MathValueInt MaxDuration { get; set; } = new();
 
-    /// <summary>
-    /// Per shot duration.
-    /// </summary>
-    public MathValueInt PerShotDuration = new();
+	/// <summary>
+	/// Gets or sets the per shot duration.
+	/// </summary>
+	public MathValueInt PerShotDuration { get; set; } = new();
 
-    /// <summary>
-    /// Forward offset for checking the range.
-    /// </summary>
-    public MathValueFloat ForwardOffset = new();
+	/// <summary>
+	/// Gets or sets the forward offset for checking the range.
+	/// </summary>
+	public MathValueFloat ForwardOffset { get; set; } = new();
 
-    /// <summary>
-    /// Radius for checking the hit range.
-    /// </summary>
-    public MathValueFloat Radius = new();
+	/// <summary>
+	/// Gets or sets the radius for checking the hit range.
+	/// </summary>
+	public MathValueFloat Radius { get; set; } = new();
 
-    /// <inheritdoc/>
-    public Type OverrideType => typeof(A7BurnEffectModule);
-
-
-    /// <inheritdoc/>
-    public void Apply(ref A7BurnEffectModule burnEffectModule)
-    {
-        MaxDuration.MathCalculation(ref burnEffectModule._maxDuration);
-        PerShotDuration.MathCalculation(ref burnEffectModule._perShotDuration);
-        ForwardOffset.MathCalculation(ref burnEffectModule._forwardOffset);
-        Radius.MathCalculation(ref burnEffectModule._radius);
-    }
-
-    /// <inheritdoc/>
-    public void Apply(ref object classToOverride)
-    {
-        if (classToOverride is not A7BurnEffectModule)
-            return;
-        A7BurnEffectModule overrides = (A7BurnEffectModule)classToOverride;
-        Apply(ref overrides);
-    }
+	/// <inheritdoc/>
+	public override void Apply([NotNull] ref A7BurnEffectModule burnEffectModule)
+	{
+		MaxDuration.MathCalculation(ref burnEffectModule._maxDuration);
+		PerShotDuration.MathCalculation(ref burnEffectModule._perShotDuration);
+		ForwardOffset.MathCalculation(ref burnEffectModule._forwardOffset);
+		Radius.MathCalculation(ref burnEffectModule._radius);
+	}
 }

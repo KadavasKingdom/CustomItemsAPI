@@ -1,32 +1,21 @@
-﻿using InventorySystem.Items.ThrowableProjectiles;
+using InventorySystem.Items.ThrowableProjectiles;
+using System.Diagnostics.CodeAnalysis;
 
-namespace CustomItemsAPI.Overrides;
+namespace CustomItemsAPI;
 
 /// <summary>
 /// Override class for <see cref="TimeGrenade"/>.
 /// </summary>
-public class TimeGrenadeOverride : IOverride<TimeGrenade>
+public class TimeGrenadeOverride : BaseOverride<TimeGrenade>
 {
-    /// <summary>
-    /// Changes <see cref="TimeGrenade._fuseTime"/>.
-    /// </summary>
-    public MathValueFloat FuseTime = new();
+	/// <summary>
+	/// Gets or sets the changes for <see cref="TimeGrenade._fuseTime"/>.
+	/// </summary>
+	public MathValueFloat FuseTime { get; set; } = new();
 
-    /// <inheritdoc/>
-    public virtual Type OverrideType => typeof(TimeGrenade);
-
-    /// <inheritdoc/>
-    public virtual void Apply(ref TimeGrenade classToOverride)
-    {
-        FuseTime.MathCalculation(ref classToOverride._fuseTime);
-    }
-
-    /// <inheritdoc/>
-    public virtual void Apply(ref object classToOverride)
-    {
-        if (classToOverride.GetType() != OverrideType)
-            return;
-        TimeGrenade overrides = (TimeGrenade)classToOverride;
-        Apply(ref overrides);
-    }
+	/// <inheritdoc/>
+	public override void Apply([NotNull] ref TimeGrenade classToOverride)
+	{
+		FuseTime.MathCalculation(ref classToOverride._fuseTime);
+	}
 }

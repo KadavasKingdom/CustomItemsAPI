@@ -1,34 +1,26 @@
-﻿using InventorySystem.Items.Firearms.Modules.Scp127;
+using InventorySystem.Items.Firearms.Modules.Scp127;
+using System.Diagnostics.CodeAnalysis;
 
-namespace CustomItemsAPI.Overrides;
+namespace CustomItemsAPI;
 
 /// <summary>
-/// Override class for <see cref="Scp127HumeModule"/>
+/// Override class for <see cref="Scp127HumeModule"/>.
 /// </summary>
-public class Scp127HumeModuleOverride : IOverride<Scp127HumeModule>
+public class Scp127HumeModuleOverride : BaseOverride<Scp127HumeModule>
 {
-    /// <summary>
-    /// Helps to ovverride <see cref="Scp127HumeModule._maxPerTier"/>
-    /// </summary>
-    public Dictionary<Scp127Tier, float> TierToMaxShield = null;
+	/// <summary>
+	/// Gets or sets the override for <see cref="Scp127HumeModule._maxPerTier"/>.
+	/// </summary>
+	public Dictionary<Scp127Tier, float>? TierToMaxShield { get; set; }
 
-    /// <inheritdoc/>
-    public Type OverrideType => typeof(Scp127HumeModule);
+	/// <inheritdoc/>
+	public override void Apply([NotNull] ref Scp127HumeModule classToOverride)
+	{
+		if (TierToMaxShield == null)
+		{
+			return;
+		}
 
-    /// <inheritdoc/>
-    public void Apply(ref Scp127HumeModule classToOverride)
-    {
-        if (TierToMaxShield == null)
-            return;
-        classToOverride._maxPerTier = [.. TierToMaxShield.Select(x => new Scp127HumeModule.MaxHumeTierPair() { Tier = x.Key, MaxShield = x.Value })];
-    }
-
-    /// <inheritdoc/>
-    public void Apply(ref object classToOverride)
-    {
-        if (classToOverride is not Scp127HumeModule)
-            return;
-        Scp127HumeModule overrides = (Scp127HumeModule)classToOverride;
-        Apply(ref overrides);
-    }
+		classToOverride._maxPerTier = [.. TierToMaxShield.Select(x => new Scp127HumeModule.MaxHumeTierPair() { Tier = x.Key, MaxShield = x.Value })];
+	}
 }
