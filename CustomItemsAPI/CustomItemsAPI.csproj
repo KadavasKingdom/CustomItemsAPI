@@ -1,29 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<!-- Settable (Version, etc) -->
 	<PropertyGroup>
-		<AssemblyName>CustomItemsAPI</AssemblyName>
-		<RootNamespace>CustomItemsAPI</RootNamespace>
-		<Copyright>SlejmUr</Copyright>
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-		<Version>0.0.11.0</Version>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Authors>SlejmUr</Authors>
-		<Company>SlejmUr</Company>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<RepositoryUrl>https://github.com/SlejmUr/CustomItemsAPI</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/SlejmUr/CustomItemsAPI</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/KadavasKingdom/CustomItemsAPI</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/KadavasKingdom/CustomItemsAPI</PackageProjectUrl>
+		<Authors>KadavasKingdom</Authors>
+		<Copyright>(c) 2025-2026 KadavasKingdom</Copyright>
+		<Version>0.1.0</Version>
+		<FileVersion>$(Verion)</FileVersion>
+		<DateAndTime>$([System.DateTime]::UtcNow.ToString('yy'))$([System.DateTime]::UtcNow.DayOfYear.ToString('000'))$([System.DateTime]::UtcNow.ToString('HHmm'))</DateAndTime>
+		<PackageVersion>$(Version).$(DateAndTime)</PackageVersion>
+		<PackageId>KadavasKingdom.CustomItemsAPI</PackageId>
+		<PackageTags>scpsl;labapi;labapi-plugin</PackageTags>
 		<Description>LabAPI CustomItems implementation.</Description>
-		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<PackageTags>labapi-plugin</PackageTags>
 	</PropertyGroup>
-
+	
+	<!-- Nuget References -->
 	<ItemGroup>
-		<None Include="..\LICENSE.txt" Pack="true" PackagePath="\" />
-		<None Include="..\README.md" Pack="true" PackagePath="\" />
+	  <PackageReference Include="KadavasKingdom.LabApiExtensions" Version="0.4.4.263172102" />
 	</ItemGroup>
 
+	<!-- DLL References -->
 	<ItemGroup>
-	  <PackageReference Update="Northwood.LabAPI" Version="1.1.6.1" />
+		<Reference Include="Assembly-CSharp" Publicize="true" Private="false" />
+		<Reference Include="Assembly-CSharp-firstpass" Private="false" />
+		<Reference Include="CommandSystem.Core" Private="false" />
+		<Reference Include="Mirror" Publicize="true" Private="false" />
+		<Reference Include="NorthwoodLib" Private="false" />
+		<Reference Include="Pooling" Private="false" />
+		<Reference Include="UnityEngine.PhysicsModule" Private="false" />
+		<Reference Include="YamlDotNet" Private="false" />
 	</ItemGroup>
-
 </Project>
